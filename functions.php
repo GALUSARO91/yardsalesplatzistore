@@ -2,13 +2,13 @@
 
 function plz_assets(){
 
-    wp_register_style("google-font","https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700",array(),false,'all');
+    wp_register_style("google-font",'https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700',array(),false,'all');
     wp_register_style("google-font-2","https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap",array(),false,'all');
     wp_register_style("bootstrap","https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css",array(),"5-1",'all');
 
-    wp_enqueue_style("estilos", get_template_directory_uri()."/assets/css/style.css", array("google-font","bootstrap"));
+    wp_enqueue_style("estilos", get_stylesheet_directory_uri()."/assets/css/style.css", array("google-font","bootstrap"));
 
-    wp_enqueue_script("yardsale-js",get_template_directory_uri()."/assets/js/script.js");
+    wp_enqueue_script("yardsale-js",get_stylesheet_directory_uri()."/assets/js/script.js");
 }
 
 add_action("wp_enqueue_scripts","plz_assets");
@@ -94,3 +94,32 @@ function plz_add_to_signin_menu(){
 }
 
 add_action('plz_signin','plz_add_to_signin_menu');
+
+// add_action('plz_signin','storefront_product_search'); -> agregar barra de busqueda
+
+remove_action('woocommerce_after_shop_loop_item','woocommerce_template_loop_add_to_cart');
+
+function plz_add_to_cart(){
+    global $product;
+    ?>
+        <a href="<?php echo $product->add_to_cart_url();?>" class="productos__add-to-cart">
+            <img src="<?php echo get_stylesheet_directory_uri();?>/assets/img/add-to-cart.svg" alt="agragar al carrito">
+        </a>
+    <?php
+}
+
+add_action('woocommerce_after_shop_loop_item','plz_add_to_cart',10);
+
+
+function plz_add_ws_share(){
+    global $product;
+
+    ?>
+          <a href="https://wa.me/50584728238/?text=Quisiera%20saber%20mas%20de%20este%20producto: <?php echo $product->get_permalink();?>" target = "blank" class="productos__ws__share">
+            <img src="<?php echo get_stylesheet_directory_uri();?>/assets/img/whatsapp-brands.svg" alt="compartir en whatsapp">
+        </a>
+    
+    <?php
+}
+
+add_action('woocommerce_after_shop_loop_item','plz_add_ws_share',11);
